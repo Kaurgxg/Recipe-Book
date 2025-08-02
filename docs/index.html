@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Recipe Book</title>
+
+  <!-- Google Font: Jersey 10 -->
+  <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+
+  <style>
+    /* Full screen black background */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Jersey 10', sans-serif;
+    }
+
+    /* Container with background image and fixed size */
+    .container {
+      width: 900px;    /* adjust width as needed */
+      height: 550px;   /* adjust height as needed */
+      background-image: url('assets/bg.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      border-radius: 20px;
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      box-shadow: 0 0 20px rgba(255,255,255,0.4);
+      color: black;
+      box-sizing: border-box;
+    }
+
+
+    /* Heading */
+    .container h1 {
+      font-size: 6rem;
+      margin: 0;
+      color: black;
+      text-shadow: 1px 1px 4px rgba(255,255,255,0.7);
+    }
+
+    /* Buttons */
+    .bttn {
+      background: none;
+      border: none;
+      color: black;
+      font-size: 2rem;
+      padding: 0.75rem 2rem;
+      cursor: pointer;
+      font-family: 'Jersey 10', sans-serif;
+      transition: color 0.3s ease;
+    }
+    .bttn:hover {
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>RECIPE BOOK</h1>
+    <button class="bttn" onclick="window.location.href='view.html'">View Recipe</button>
+    <button class="bttn" onclick="window.location.href='Add.html'">Add Recipe</button>
+    <button class="bttn" onclick="window.location.href='edit.html'">Edit Recipe</button>
+  </div>
+
+</body>
+</html>

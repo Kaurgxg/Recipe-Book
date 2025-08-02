@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Recipe Book</title>
+  <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      background-color: black;
+      font-family: 'Jersey 10', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      position: relative;
+      width: 900px;
+      height: 550px;
+      background-image: url('assets/bg.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.4);
+      overflow: hidden;
+      padding: 20px;
+      box-sizing: border-box;
+      color: #000;
+    }
+
+    .menu-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .menu-btn img {
+      height: 50px;
+      width: auto;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 80px;
+      left: 20px;
+      background-color: rgba(255, 255, 255, 0.97);
+      border: 2px solid #ccc;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+      flex-direction: column;
+      min-width: 220px;
+      padding: 10px 0;
+      z-index: 20;
+      opacity: 0;
+      transform: translateY(-10px);
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .dropdown-menu.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .dropdown-menu a,
+    .submenu a {
+      padding: 8px 18px;
+      font-size: 1.3rem;
+      line-height: 1.2;
+      color: #000;
+    }
+
+    .dropdown-menu a:hover,
+    .submenu a:hover {
+      background-color: rgba(24, 23, 23, 0.5);
+      transform: translateX(2px);
+    }
+
+    .submenu {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      padding-left: 15px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-left: 2px solid #ccc;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .submenu.show {
+      opacity: 1;
+      max-height: 300px;
+      padding-top: 5px;
+    }
+
+    .search-container {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      z-index: 10;
+    }
+
+    .textbox-wrapper {
+      position: relative;
+      width: 300px;
+      height: 60px;
+      background-image: url('assets/textbox.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .custom-input {
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      width: 80%;
+      height: 60%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: rgb(3, 3, 3);
+      font-size: 16px;
+      outline: none;
+    }
+
+    .custom-input::placeholder {
+      color: rgb(0, 0, 0);
+      opacity: 1;
+    }
+
+    .search-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .search-btn img {
+      height: 60px;
+      width: auto;
+    }
+
+    .book-section {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -40%);
+      width: 660px;
+      height: 420px;
+      background-image: url('assets/Book.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      display: flex;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
+      padding: 20px;
+      box-sizing: border-box;
+      color: #000;
+      flex-direction: row;
+    }
+
+    .left-page, .right-page {
+      flex: 1;
+      padding: 10px 15px;
+      overflow-y: auto;
+      max-height: 320px; /* Add this line to prevent overflow */
+      font-size: 0.9rem;  
+    }
+
+    .left-page img {
+      width: 50%;
+      margin-left: 29%;
+      height: 100px;
+      object-fit: fill;
+    }
+
+    .left-page h3 {
+      margin: 10px auto 10px auto;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .left-page h4, .right-page h4 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      text-decoration: underline;
+      font-weight: bold;
+      color: #090909;
+      margin-left: 15%;
+    }
+
+    .left-page ul {
+      font-size: 1rem;
+      padding-left: 50px;
+    }
+
+    .right-page ol {
+      font-size: 1rem;
+      padding-left: 39px;
+    }
+
+    .nav-buttons {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+      z-index: 10;
+    }
+
+    .nav-buttons button {
+      background-color: rgba(255,255,255,0.2);
+      border: 2px solid white;
+      color: white;
+      padding: 8px 15px;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-buttons button:hover {
+      background-color: rgba(255,255,255,0.6);
+      color: black;
+    }
+
+    .back-button {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      text-decoration: none;
+      font-size: 1.2rem;
+      color: white;
+      background-color: rgba(255,255,255,0.2);
+      border: 2px solid white;
+      padding: 8px 15px;
+      border-radius: 10px;
+      transition: background-color 0.3s ease;
+      z-index: 11;
+    }
+
+    .back-button:hover {
+      background-color: rgba(255,255,255,0.6);
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Menu Button -->
+  <button class="menu-btn" onclick="toggleMenu()">
+    <img src="assets/menu.png" alt="Menu" />
+  </button>
+
+  <!-- Dropdown Menu -->
+  <div class="dropdown-menu" id="dropdownMenu">
+    <div class="has-submenu">
+      <a href="#">Indian ▸</a>
+      <div class="submenu">
+        <a href="#"  data-index="0">Butter Paneer</a>
+        <a href="#"  data-index="1">Chole Masala</a>
+      </div>
+    </div>
+
+    <div class="has-submenu">
+      <a href="#">Chinese ▸</a>
+      <div class="submenu">
+        <a href="#"  data-index="2">Manchurian</a>
+        <a href="#"  data-index="3">Fried Rice</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Section -->
+  <div class="search-container">
+    <div class="textbox-wrapper">
+      <input type="text" class="custom-input" placeholder="Search recipe..." />
+    </div>
+    <button class="search-btn">
+      <img src="assets/search.png" alt="Search" />
+    </button>
+  </div>
+
+  <!-- Book Section -->
+  <div class="book-section">
+    <div class="left-page">
+      <h3 id="recipe-title">Butter Paneer</h3>
+      <img id="recipe-img" src="assets/Butterpaneer.png" alt="Butter Paneer" />
+      <h4>INGREDIENTS:</h4>
+      <ul id="ingredients"></ul>
+    </div>
+    <div class="right-page">
+      <h4>STEPS:</h4>
+      <ol id="steps"></ol>
+    </div>
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="nav-buttons">
+    <button id="prev-btn">&lt; Previous</button>
+    <button id="next-btn">Next &gt;</button>
+  </div>
+
+  <!-- Back Button -->
+  <a href="index.html" class="back-button">← Back</a>
+</div>
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('dropdownMenu');
+    menu.classList.toggle('show');
+  }
+
+  function toggleSubmenu(event) {
+    event.preventDefault();
+    const submenu = event.currentTarget.nextElementSibling;
+    if (submenu) submenu.classList.toggle('show');
+  }
+
+  document.addEventListener('click', function (event) {
+    const menu = document.getElementById('dropdownMenu');
+    const button = document.querySelector('.menu-btn');
+    if (!menu.contains(event.target) && !button.contains(event.target)) {
+      menu.classList.remove('show');
+      const submenus = menu.querySelectorAll('.submenu');
+      submenus.forEach(sub => sub.classList.remove('show'));
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const submenuTriggers = document.querySelectorAll('#dropdownMenu .has-submenu > a');
+    submenuTriggers.forEach(trigger => {
+      trigger.addEventListener('click', toggleSubmenu);
+    });
+  });
+
+  const recipes = [
+    {
+      title: "Butter Paneer",
+      img: "assets/Butterpaneer.png",
+      ingredients: [
+        "200g Paneer", "2 tbsp Butter", "1 cup Tomato Puree", "1/2 cup Cream", "Spices (Salt, Garam Masala, Chili Powder)"
+      ],
+      steps: [
+        "Sauté onions and spices in butter.",
+        "Add tomato puree and cook until thick.",
+        "Add cream and stir well.",
+        "Add paneer cubes and simmer for 5–10 mins.",
+        "Garnish and serve hot with naan or rice."
+      ]
+    },
+    {
+      title: "Chole Masala",
+      img: "assets/masala.png",
+      ingredients: [
+        "1 cup Chickpeas", "2 Onions", "2 Tomatoes", "Ginger-garlic paste", "Spices (Cumin, Coriander, Garam Masala)"
+      ],
+      steps: [
+        "Soak chickpeas overnight and boil until soft.",
+        "Sauté onions and ginger-garlic paste.",
+        "Add tomatoes and cook till mushy.",
+        "Add boiled chickpeas and spices.",
+        "Simmer for 15-20 mins and serve hot."
+      ]
+    },
+    {
+      title: "Manchurian",
+      img: "assets/Manchurian.png",
+      ingredients: [
+        "1 cup Cabbage", "½ cup Carrot", "2 tbsp All-purpose flour", "1 tbsp Cornflour", "Salt and Pepper", "Oil", "1 tbsp Oil", "1 tsp Garlic", "1 tsp Ginger", "2 tbsp Spring Onions", "2 tbsp Soy Sauce", "1 tbsp Red Chili Sauce", "1 tbsp Tomato Ketchup", "½ tsp Vinegar", "¼ cup Water", "1 tsp Cornflour slurry"
+      ],
+      steps: [
+        "Mix grated cabbage, carrot, flour, cornflour, salt, and pepper.",
+"Form small balls from the mixture.",
+"Deep fry the balls until golden and crispy.",
+"Sauté garlic, ginger, and spring onions in oil.",
+"Add soy sauce, chili sauce, ketchup, vinegar, and water.",
+"Stir in cornflour slurry and cook until the sauce thickens.",
+"Add fried balls to the sauce and toss well.",
+"Garnish with spring onions and serve hot."
+      ]
+    },{
+      title: "Fried Rice",
+      img: "assets/Friedrice.png",
+      ingredients: [
+        "2 cups Cooked Rice", "1 cup Mixed Vegetables (carrot, beans, peas)", "2 tbsp Oil", "1 tsp Garlic (chopped)", "1 tsp Ginger (chopped)", "2 tbsp Spring Onions", "2 tbsp Soy Sauce", "1 tbsp Vinegar", "1 tbsp Chili Sauce", "Salt and Pepper to taste"
+    ],
+      steps: [
+       "Heat oil in a pan and sauté garlic and ginger.",
+"Add chopped vegetables and stir-fry on high flame.",
+"Add soy sauce, vinegar, and chili sauce.",
+"Mix in the cooked rice and toss well.",
+"Season with salt and pepper.",
+"Garnish with spring onions and serve hot."
+      ]
+    }
+  ];
+
+  const titleElem = document.getElementById('recipe-title');
+  const imgElem = document.getElementById('recipe-img');
+  const ingredientsContainer = document.getElementById('ingredients');
+  const stepsContainer = document.getElementById('steps');
+
+  let currentRecipeIndex = 0;
+
+  function clearList(container) {
+    while (container.firstChild) container.removeChild(container.firstChild);
+  }
+
+  function typeTextList(container, list, delay = 40, index = 0, callback) {
+    if (index >= list.length) {
+      if (callback) callback();
+      return;
+    }
+    const item = document.createElement("li");
+    container.appendChild(item);
+
+    let charIndex = 0;
+    function typeChar() {
+      if (charIndex < list[index].length) {
+        item.textContent += list[index].charAt(charIndex);
+        charIndex++;
+        setTimeout(typeChar, delay);
+      } else {
+        setTimeout(() => typeTextList(container, list, delay, index + 1, callback), 200);
+      }
+    }
+    typeChar();
+  }
+
+  function loadRecipe(index) {
+    if (index < 0 || index >= recipes.length) return;
+    currentRecipeIndex = index;
+
+    const recipe = recipes[index];
+    titleElem.textContent = recipe.title;
+    imgElem.src = recipe.img;
+    imgElem.alt = recipe.title;
+
+    clearList(ingredientsContainer);
+    clearList(stepsContainer);
+
+    typeTextList(ingredientsContainer, recipe.ingredients, 30, 0, () => {
+      typeTextList(stepsContainer, recipe.steps, 30, 0);
+    });
+  }
+
+  document.getElementById('prev-btn').addEventListener('click', () => {
+    let newIndex = currentRecipeIndex - 1;
+    if (newIndex < 0) newIndex = recipes.length - 1;
+    loadRecipe(newIndex);
+  });
+
+  document.getElementById('next-btn').addEventListener('click', () => {
+    let newIndex = currentRecipeIndex + 1;
+    if (newIndex >= recipes.length) newIndex = 0;
+    loadRecipe(newIndex);
+  });
+
+  loadRecipe(0);
+
+  document.querySelectorAll('.submenu a').forEach(link => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const index = parseInt(link.getAttribute('data-index'));
+      if (!isNaN(index)) {
+        loadRecipe(index);
+        document.getElementById('dropdownMenu').classList.remove('show');
+        document.querySelectorAll('.submenu').forEach(sub => sub.classList.remove('show'));
+      }
+    });
+  });
+
+  document.querySelector('.search-btn').addEventListener('click', () => {
+    const query = document.querySelector('.custom-input').value.trim().toLowerCase();
+    if (!query) return;
+
+    const foundIndex = recipes.findIndex(recipe =>
+      recipe.title.toLowerCase().includes(query)
+    );
+
+    if (foundIndex !== -1) {
+      loadRecipe(foundIndex);
+      document.getElementById('dropdownMenu').classList.remove('show');
+      document.querySelectorAll('.submenu').forEach(sub => sub.classList.remove('show'));
+    } else {
+      alert('Recipe not found!');
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Recipe Book</title>
+  <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      font-family: 'Jersey 10', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #000;
+    }
+
+    .container {
+      margin-top: 60px;
+      width: 900px;
+      height: 550px;
+      background-image: url('assets/bg.jpg');
+      background-size: cover;
+      background-position: center;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.4);
+      padding: 20px;
+      box-sizing: border-box;
+      display: flex;
+      gap: 50px;
+      position: relative;
+    }
+
+    .back-button-bottom {
+      position: absolute;
+      bottom: 15px;
+      right: 20px;
+      text-decoration: none;
+      font-size: 1.2rem;
+      color: white;
+      background-color: rgba(255, 255, 255, 0.2);
+      border: 2px solid white;
+      padding: 8px 15px;
+      border-radius: 10px;
+      transition: background-color 0.3s ease;
+      font-family: 'Jersey 10', sans-serif;
+    }
+
+    .back-button-bottom:hover {
+      background-color: rgba(255, 255, 255, 0.6);
+      color: black;
+    }
+
+    .left-section, .right-section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .Recipe, .ingredients {
+      width: 350px;
+      border-radius: 30px;
+      background-color: rgba(255, 255, 255, 0.6);
+      padding: 20px;
+    }
+
+    .Recipe {
+      height: 485px;
+    }
+
+    .ingredients {
+      height: 300px;
+    }
+
+    .Recipe h2, .ingredients h2 {
+      font-size: xx-large;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100%;
+      resize: none;
+      border: none;
+      background-color: transparent;
+      outline: none;
+      color: #000;
+      font-family: 'Jersey 10', sans-serif;
+      font-size: 20px;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .image-button-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .image {
+      width: 200px;
+      height: 170px;
+      border-radius: 30px;
+      background-color: rgba(255, 255, 255, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .image img {
+      width: 50px;
+      height: 50px;
+      transition: 0.3s ease;
+    }
+
+    .image:hover img {
+      transform: scale(1.1);
+    }
+
+    .bttn {
+      height: auto;
+      padding: 15px 35px;
+      border: none;
+      border-radius: 30px;
+      background: none;
+      color: white;
+      font-size: 36px;
+      cursor: pointer;
+      font-family: 'Jersey 10', sans-serif;
+      transition: background-color 0.3s;
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    .bttn:hover {
+      background-color: rgba(255, 255, 255, 0.6);
+      color: black;
+    }
+
+    .output-container {
+      margin: 30px auto;
+      width: 90%;
+      max-width: 900px;
+    }
+
+    .outputBox {
+      background-color: rgba(255,255,255,0.9);
+      padding: 15px 20px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      font-size: 18px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.3);
+    }
+
+    .outputBox img {
+      max-width: 100px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(102, 51, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .popup-box {
+      background-color: #fff3e0;
+      padding: 30px 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      animation: popupFadeIn 0.4s ease;
+      font-family: 'Jersey 10', sans-serif;
+      width: 300px;
+    }
+
+    .popup-box h2 {
+      font-size: 24px;
+      color: #5d4037;
+      margin-bottom: 20px;
+    }
+
+    .popup-box input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      margin-bottom: 20px;
+      font-family: 'Jersey 10', sans-serif;
+    }
+
+    .popup-buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .popup-buttons button {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      font-family: 'Jersey 10', sans-serif;
+    }
+
+    .popup-save {
+      background-color: #8d6e63;
+      color: white;
+    }
+
+    .popup-cancel {
+      background-color: #d7ccc8;
+      color: #4e342e;
+    }
+
+    @keyframes popupFadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="left-section">
+      <div class="Recipe">
+        <h2>Recipe</h2>
+        <textarea id="recipeInput" placeholder="Write your recipe..."></textarea>
+      </div>
+    </div>
+    <div class="right-section">
+      <div class="ingredients">
+        <h2>Ingredients</h2>
+        <textarea id="ingredientsInput" placeholder="List ingredients..."></textarea>
+      </div>
+      <div class="image-button-wrapper">
+        <label for="imageUpload" class="image" title="Click to upload image">
+          <img id="previewImage" src="assets/plus.png" alt="Upload">
+        </label>
+        <input type="file" id="imageUpload" accept="image/*" style="display: none" onchange="previewUploadedImage(event)">
+        <button class="bttn" onclick="saveRecipe()">Add Recipe</button>
+      </div>
+    </div>
+    <a href="index.html" class="back-button-bottom">← Back</a>
+  </div>
+
+  <div class="output-container" id="recipesList"></div>
+
+  <!-- Custom Name Popup -->
+  <div id="namePopup" class="popup-overlay">
+    <div class="popup-box">
+      <h2>Enter Recipe Name</h2>
+      <input type="text" id="recipeNameInput" placeholder="e.g., Choco Delight" />
+      <div class="popup-buttons">
+        <button onclick="submitName()" class="popup-save">Save</button>
+        <button onclick="closePopup()" class="popup-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentRecipeData = {};
+
+    function previewUploadedImage(event) {
+      const input = event.target;
+      const reader = new FileReader();
+      reader.onload = function () {
+        const preview = document.getElementById("previewImage");
+        preview.src = reader.result;
+      };
+      if (input.files[0]) {
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function saveRecipe() {
+      const recipe = document.getElementById("recipeInput").value.trim();
+      const ingredients = document.getElementById("ingredientsInput").value.trim();
+      const imageSrc = document.getElementById("previewImage").src;
+
+      if (recipe === "" || ingredients === "") {
+        alert("Please fill out both fields.");
+        return;
+      }
+
+      currentRecipeData = { recipe, ingredients, image: imageSrc };
+      openPopup();
+    }
+
+    function openPopup() {
+      document.getElementById("namePopup").style.display = "flex";
+      document.getElementById("recipeNameInput").value = "";
+      document.getElementById("recipeNameInput").focus();
+    }
+
+    function closePopup() {
+      document.getElementById("namePopup").style.display = "none";
+    }
+
+    function submitName() {
+      const nameInput = document.getElementById("recipeNameInput").value.trim();
+      if (nameInput === "") {
+        alert("Please enter a recipe name!");
+        return;
+      }
+
+      const newRecipe = { ...currentRecipeData, name: nameInput };
+      const existingRecipes = JSON.parse(localStorage.getItem("savedRecipes")) || [];
+      existingRecipes.push(newRecipe);
+      localStorage.setItem("savedRecipes", JSON.stringify(existingRecipes));
+
+      closePopup();
+
+      alert("Recipe saved! Visit edit.html to view it.");
+
+      document.getElementById("recipeInput").value = "";
+      document.getElementById("ingredientsInput").value = "";
+      document.getElementById("previewImage").src = "plus.png";
+    }
+  </script>
+</body>
+</html>
